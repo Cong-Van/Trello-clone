@@ -1,0 +1,8 @@
+@import "../../settings";
+
+.board-columns {
+  display: flex;
+  padding-top: $gap;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
