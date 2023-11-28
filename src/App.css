@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.3em;
+  font-size: 14px;
+}
+
+.trello-amster {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 40px 50px 1fr;
+  background: url("https://images.unsplash.com/photo-1682686581362-796145f0e123?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+}
+
+.navbar {
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.app {
+  font-size: 1.5rem;
+  background-color: #0067a3;
+}
+
+.board {
+  font-size: 1.1rem;
+  background-color: #0079bf;
+}
+
+.board-columns {
+  display: flex;
+  margin-top: 10px;
+  overflow-x: auto;
+}
+
+.column {
+  flex: 0 0 auto;
+  width: 300px;
+  height: calc(100% - 10px);
+  margin-left: 10px;
+}
+
+.column * {
+  background-color: #ebecf0;
+  color: #333;
+  padding: 0 8px;
+}
+
+.column header {
+  padding-left: 15px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 16px;
+  font-weight: 600;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.column footer {
+  padding-left: 15px;
+  height: 36px;
+  line-height: 36px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.column ul {
+  list-style-type: none;
+  margin: 0;
+  max-height: calc(100% - 36px - 36px);
+  overflow-y: auto;
+}
+
+.column ul li {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.column ul li:last-child {
+  margin-bottom: 0;
+}
