@@ -1,0 +1,46 @@
+@import "../../settings";
+
+.task-card {
+  background-color: #fff;
+  border-radius: $card-border-radius;
+  margin-bottom: 6px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+
+  li {
+    padding: $gap;
+    width: 90%;
+    word-break: break-all;
+  }
+
+  .fa-trash {
+    padding: 6px;
+    width: 10%;
+    align-self: center;
+
+    &:hover {
+      color: #e42e00;
+    }
+  }
+
+  .form-edit-card {
+    input {
+      border: none;
+      outline: #0b75b3 solid 2px;
+      padding: $gap;
+      width: 114%;
+      border-radius: $card-border-radius;
+      margin-bottom: $gap;
+    }
+
+    button {
+      border: none;
+      outline: none;
+      color: white;
+      background-color: #0c66e4;
+      padding: 5px 8px;
+      border-radius: 5px;
+    }
+  }
+}

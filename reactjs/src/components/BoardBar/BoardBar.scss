@@ -1,0 +1,14 @@
+@import "../../settings";
+
+.navbar-board {
+  padding-left: $gap;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 1.1rem;
+  background-color: $navbar-board-bg-color;
+
+  .fa-star {
+    margin-left: 0.4em;
+  }
+}
