@@ -22,7 +22,7 @@ function BoardContent({
 
   const [board, setBoard] = useState(boardObj);
 
-  const elementDragging = useRef();
+  const draggingElement = useRef();
   const replaceColumn = useRef();
 
   const getAndSetBoard = async () => {
@@ -57,76 +57,76 @@ function BoardContent({
   }, []);
 
   const handleDragStart = (e) => {
-    elementDragging.current = e.target;
-    elementDragging.current.classList.add("is-dragging");
-    elementDragging.clone = e.target.cloneNode(true);
+    draggingElement.current = e.target;
+    draggingElement.current.classList.add("is-dragging");
+    draggingElement.clone = e.target.cloneNode(true);
   };
 
-  const handleColumnDragOver = (e) => {
+  const handleDragOverColumn = (e) => {
     e.preventDefault();
     const columnUnder = e.target.closest(".column");
     if (!columnUnder) return;
     // Xử lý khi kéo Card trong Column
-    if (elementDragging.clone.classList.contains("task-card")) {
+    if (draggingElement.clone.classList.contains("task-card")) {
       const cardListEl = columnUnder.querySelector(".card-list");
       if (
-        !cardListEl.contains(elementDragging.clone) ||
+        !cardListEl.contains(draggingElement.clone) ||
         e.target.closest("footer") ||
         e.target.classList.contains("column")
       )
-        cardListEl.appendChild(elementDragging.clone);
+        cardListEl.appendChild(draggingElement.clone);
       if (e.target.closest("header")) {
-        cardListEl.insertBefore(elementDragging.clone, cardListEl.firstChild);
+        cardListEl.insertBefore(draggingElement.clone, cardListEl.firstChild);
       }
       return;
     } else {
       // Xử lý khi kéo Column
-      if (elementDragging.current === columnUnder) return;
+      if (draggingElement.current === columnUnder) return;
       const columnUnderPos = columnUnder.getBoundingClientRect();
       const curPosition = { x: e.clientX, y: e.clientY };
       replaceColumn.id = columnUnder.getAttribute("data-id");
       const boardEl = e.target.closest(".board-columns");
       if (curPosition.x - columnUnderPos.x < columnUnder.clientWidth / 2) {
         replaceColumn.pos = "before";
-        boardEl.insertBefore(elementDragging.current, columnUnder);
+        boardEl.insertBefore(draggingElement.current, columnUnder);
       } else {
         replaceColumn.pos = "after";
-        boardEl.insertBefore(elementDragging.current, columnUnder.nextSibling);
+        boardEl.insertBefore(draggingElement.current, columnUnder.nextSibling);
       }
     }
   };
 
-  const handleCardDragOver = (e) => {
+  const handleDragOverCard = (e) => {
     e.preventDefault();
-    if (elementDragging.clone.classList.contains("column")) return;
+    if (draggingElement.clone.classList.contains("column")) return;
     const cardListEl = e.target.closest(".card-list");
     const cardUnder = e.target.closest(".task-card");
-    if (!cardListEl || !cardUnder || elementDragging.current === cardUnder) {
-      elementDragging.current.style.display = "none";
+    if (!cardListEl || !cardUnder || draggingElement.current === cardUnder) {
+      draggingElement.current.style.display = "none";
       return;
     }
-    if (!cardListEl.contains(elementDragging.clone))
-      cardListEl.appendChild(elementDragging.clone);
+    if (!cardListEl.contains(draggingElement.clone))
+      cardListEl.appendChild(draggingElement.clone);
     const cardUnderPos = cardUnder.getBoundingClientRect();
     const curPosition = { x: e.clientX, y: e.clientY };
     if (curPosition.y - cardUnderPos.y < cardUnder.clientHeight / 2) {
-      cardListEl.insertBefore(elementDragging.clone, cardUnder);
+      cardListEl.insertBefore(draggingElement.clone, cardUnder);
     } else {
       const nextCardUnder = cardUnder.nextSibling;
-      if (!nextCardUnder || !cardListEl.contains(elementDragging.clone)) {
-        cardListEl.appendChild(elementDragging.clone);
+      if (!nextCardUnder || !cardListEl.contains(draggingElement.clone)) {
+        cardListEl.appendChild(draggingElement.clone);
       }
-      cardListEl.insertBefore(elementDragging.clone, nextCardUnder);
+      cardListEl.insertBefore(draggingElement.clone, nextCardUnder);
     }
   };
 
   const handleDragOver = (e) => {
-    handleColumnDragOver(e);
-    handleCardDragOver(e);
+    handleDragOverColumn(e);
+    handleDragOverCard(e);
   };
 
-  const handleColumnDrop = async () => {
-    const columnId = elementDragging.current.getAttribute("data-id");
+  const handleDropColumn = async () => {
+    const columnId = draggingElement.current.getAttribute("data-id");
     if (!replaceColumn.id) return;
     const board = await getBoard();
     console.log(board.columnOrder);
@@ -178,8 +178,8 @@ function BoardContent({
     console.log("Update 1 column: ", columnId, nextCard);
     const board = await getBoard();
     // Update data and State
-    const cardListEl = elementDragging.current.parentNode;
-    elementDragging.current.style.display = "flex";
+    const cardListEl = draggingElement.current.parentNode;
+    draggingElement.current.style.display = "flex";
     const updatedColumn = board.columns.find(
       (column) => column._id === columnId
     );
@@ -191,24 +191,24 @@ function BoardContent({
     updatedColumn.cardOrder.splice(oldOrderIndex, 1);
     if (!nextCard) {
       updatedColumn.cardOrder.push(cardId);
-      cardListEl.appendChild(elementDragging.current);
+      cardListEl.appendChild(draggingElement.current);
     } else {
       const newOrderIndex = updatedColumn.cardOrder.findIndex(
         (id) => id === nextCard.dataset.id
       );
       updatedColumn.cardOrder.splice(newOrderIndex, 0, cardId);
-      cardListEl.insertBefore(elementDragging.current, nextCard);
+      cardListEl.insertBefore(draggingElement.current, nextCard);
     }
     await updateColumn(columnId, { cardOrder: updatedColumn.cardOrder });
   };
 
-  const handleCardDrop = async () => {
-    if (!elementDragging.clone.classList.contains("task-card")) return;
-    const columnEl = elementDragging.clone.closest(".column");
-    const oldColumnId = elementDragging.clone.dataset.columnId;
+  const handleDropCard = async () => {
+    if (!draggingElement.clone.classList.contains("task-card")) return;
+    const columnEl = draggingElement.clone.closest(".column");
+    const oldColumnId = draggingElement.clone.dataset.columnId;
     const newColumnId = columnEl.dataset.id;
-    const nextCard = elementDragging.clone.nextSibling;
-    const cardId = elementDragging.clone.dataset.id;
+    const nextCard = draggingElement.clone.nextSibling;
+    const cardId = draggingElement.clone.dataset.id;
 
     if (oldColumnId === newColumnId) {
       await updateOnlyOneColumn(oldColumnId, cardId, nextCard);
@@ -220,15 +220,15 @@ function BoardContent({
   };
 
   const handleDrop = async () => {
-    if (elementDragging.clone.classList.contains("column"))
-      await handleColumnDrop();
-    else await handleCardDrop();
+    if (draggingElement.clone.classList.contains("column"))
+      await handleDropColumn();
+    else await handleDropCard();
   };
 
   const handleDragEnd = useCallback(() => {
-    elementDragging.current.classList.remove("is-dragging");
-    elementDragging.clone.remove();
-    elementDragging.clone = null;
+    draggingElement.current.classList.remove("is-dragging");
+    draggingElement.clone.remove();
+    draggingElement.clone = null;
   }, []);
 
   const columns = mapOrder(board.columns, board.columnOrder, "_id");
