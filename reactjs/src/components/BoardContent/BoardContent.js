@@ -139,10 +139,10 @@ function BoardContent({
     if (replaceColumn.pos === "after") {
       newOrderIndex++;
     }
-    console.log(updatedBoard.columnOrder);
     updatedBoard.columnOrder.splice(newOrderIndex, 0, columnId);
     updateBoard(board._id, { columnOrder: updatedBoard.columnOrder });
     setBoard(updatedBoard);
+    replaceColumn.id = null;
   };
 
   const updateOldColumn = async (columnId, cardId) => {
